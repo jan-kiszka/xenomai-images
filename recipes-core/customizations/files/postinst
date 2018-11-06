@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# Jailhouse, a Linux-based partitioning hypervisor
+#
+# Copyright (c) Siemens AG, 2018
+#
+# Authors:
+#  Jan Kiszka <jan.kiszka@siemens.com>
+#
+# SPDX-License-Identifier: MIT
+#
+
+echo "Xenomai Demo Image (login: root/root)" > /etc/issue
+
+echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+
+echo "demo" > /etc/hostname
+
+echo "root:root" | chpasswd

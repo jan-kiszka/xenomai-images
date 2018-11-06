@@ -1,0 +1,44 @@
+From d8db92eb66ebd314d339a5faa5245b52ce093bef Mon Sep 17 00:00:00 2001
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Date: Tue, 6 Nov 2018 16:34:17 +0100
+Subject: [PATCH] debian: Add arm64 as target architecture
+
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+---
+ debian/control | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/debian/control b/debian/control
+index 3427987e15..477b16d9fd 100644
+--- a/debian/control
++++ b/debian/control
+@@ -8,7 +8,7 @@ Homepage: http://www.xenomai.org/
+ 
+ Package: xenomai-runtime
+ Section: devel
+-Architecture: amd64 arm armeb armel armhf i386 powerpc powerpcspe
++Architecture: amd64 arm armeb armel armhf arm64 i386 powerpc powerpcspe
+ Depends: ${shlibs:Depends}, ${misc:Depends}
+ Suggests: xenomai-kernel-source
+ Replaces: xenomai
+@@ -45,7 +45,7 @@ Description: Source for Xenomai kernel-space support
+ 
+ Package: libxenomai1
+ Section: libs
+-Architecture: amd64 arm armeb armel armhf i386 powerpc powerpcspe
++Architecture: amd64 arm armeb armel armhf arm64 i386 powerpc powerpcspe
+ Depends: ${shlibs:Depends}, ${misc:Depends}
+ Suggests: xenomai-kernel-source
+ Replaces: xenomai
+@@ -61,7 +61,7 @@ Description: Shared libraries for Xenomai
+ 
+ Package: libxenomai-dev
+ Section: libdevel
+-Architecture: amd64 arm armeb armel armhf i386 powerpc powerpcspe
++Architecture: amd64 arm armeb armel armhf arm64 i386 powerpc powerpcspe
+ Depends: libxenomai1 (= ${binary:Version}), ${misc:Depends}
+ Suggests: xenomai-kernel-source
+ Replaces: xenomai
+-- 
+2.16.4
+

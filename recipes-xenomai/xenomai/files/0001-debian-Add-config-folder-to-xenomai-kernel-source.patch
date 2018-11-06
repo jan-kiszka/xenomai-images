@@ -1,0 +1,28 @@
+From 07d87b9b2ca45f81024056720b28f6cdbcb3b9c7 Mon Sep 17 00:00:00 2001
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Date: Tue, 6 Nov 2018 13:37:21 +0100
+Subject: [PATCH] debian: Add config folder to xenomai-kernel-source
+
+Meanwhile required for prepare-kernel.sh.
+
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+---
+ debian/rules | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/debian/rules b/debian/rules
+index 8b871a4882..99ed8982ce 100755
+--- a/debian/rules
++++ b/debian/rules
+@@ -73,7 +73,7 @@ install: build
+ 	cp debian/libxenomai1.lintian $(CURDIR)/debian/libxenomai1/usr/share/lintian/overrides/libxenomai1
+ 	cp debian/libxenomai-dev.lintian $(CURDIR)/debian/libxenomai-dev/usr/share/lintian/overrides/libxenomai-dev
+ 	mkdir -p $(CURDIR)/debian/xenomai-kernel-source/usr/src/xenomai-kernel-source $(CURDIR)/debian/xenomai-kernel-source/usr/share/doc/xenomai-kernel-source
+-	cp -a kernel include scripts $(CURDIR)/debian/xenomai-kernel-source/usr/src/xenomai-kernel-source
++	cp -a config kernel include scripts $(CURDIR)/debian/xenomai-kernel-source/usr/src/xenomai-kernel-source
+ 
+ # Build architecture-independent files here.
+ binary-indep: build install
+-- 
+2.16.4
+
