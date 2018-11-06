@@ -21,6 +21,10 @@ start containers.
 To build, e.g., the QEMU AMD64 target inside Docker, invoke kas-docker like
 this:
 
-    kas-docker --isar build kas.yml
+    kas-docker --isar build kas.yml:board-qemu-amd64.yml
 
 This image can be run using `start-qemu.sh x86`.
+
+The QEMU ARM64 target is selected by `... kas.yml:board-qemu-arm64.yml` and
+started via `start-qemu.sh arm64`. Make sure to have qemu-aarch64-system
+installed.
