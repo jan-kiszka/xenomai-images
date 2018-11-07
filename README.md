@@ -26,5 +26,11 @@ this:
 This image can be run using `start-qemu.sh x86`.
 
 The QEMU ARM64 target is selected by `... kas.yml:board-qemu-arm64.yml` and
-started via `start-qemu.sh arm64`. Make sure to have qemu-aarch64-system
+started via `start-qemu.sh arm64`. Make sure to have `qemu-aarch64-system`
 installed.
+
+Physical targets will generate read-to-boot images under
+`build/tmp/deploy/images/`. To flash, e.g., the HiKey image to an SD card, run
+
+    dd if=build/tmp/deploy/images/ebsy-image-base-long-life-ebsy-simatic-ipc227e.wic.img \
+       of=/dev/<medium-device> bs=1M status=progress
