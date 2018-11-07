@@ -11,7 +11,7 @@
 
 require recipes-kernel/linux/linux-custom.inc
 
-KERNEL_DEFCONFIG = "${MACHINE}_defconfig"
+KERNEL_DEFCONFIG = "${DISTRO_ARCH}_defconfig"
 
 SRC_URI += "file://${KERNEL_DEFCONFIG}"
 
