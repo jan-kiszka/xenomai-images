@@ -63,10 +63,16 @@ IMAGE_FILE=$(ls ${IMAGE_PREFIX}.ext4.img)
 KERNEL_FILE=$(ls ${IMAGE_PREFIX}.vmlinuz* | tail -1)
 INITRD_FILE=$(ls ${IMAGE_PREFIX}.initrd.img* | tail -1)
 
+unset ADDITIONAL_ARGS
+if [ -z "${DISPLAY}" ]; then
+	ADDITIONAL_ARGS="-nographic"
+fi
+
 shift 1
 
 ${QEMU_PATH}${QEMU} \
 	-drive file=${IMAGE_FILE},discard=unmap,if=none,id=disk,format=raw \
 	-m 1G -serial mon:stdio -netdev user,id=net \
 	-kernel ${KERNEL_FILE} -append "${KERNEL_CMDLINE}" \
-	-initrd ${INITRD_FILE} ${QEMU_EXTRA_ARGS} "$@"
+	-initrd ${INITRD_FILE} ${QEMU_EXTRA_ARGS} "$@" \
+	${ADDITIONAL_ARGS}
