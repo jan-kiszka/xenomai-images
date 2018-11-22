@@ -63,6 +63,10 @@ IMAGE_FILE=$(ls ${IMAGE_PREFIX}.ext4.img)
 KERNEL_FILE=$(ls ${IMAGE_PREFIX}.vmlinuz* | tail -1)
 INITRD_FILE=$(ls ${IMAGE_PREFIX}.initrd.img* | tail -1)
 
+if [ -z "${DISPLAY}" ]; then
+	QEMU_EXTRA_ARGS="${QEMU_EXTRA_ARGS} -nographic"
+fi
+
 shift 1
 
 ${QEMU_PATH}${QEMU} \
