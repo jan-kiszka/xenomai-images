@@ -33,7 +33,7 @@ installed.
 Physical targets will generate read-to-boot images under
 `build/tmp/deploy/images/`. To flash, e.g., the HiKey image to an SD card, run
 
-    dd if=build/tmp/deploy/images/ebsy-image-base-long-life-ebsy-simatic-ipc227e.wic.img \
+    dd if=build/tmp/deploy/images/hikey/demo-image-hikey-xenomai-demo-hikey.wic.img \
        of=/dev/<medium-device> bs=1M status=progress
 
 ## Community Resources
