@@ -22,5 +22,6 @@ dpkg_runbuild_prepend() {
     bbplain $(printf "xenomai-next: Building revision %.12s\n" \
                      $(cat ${S}/.git/refs/heads/next))
 
-    sudo chroot ${BUILDCHROOT_DIR} sh -c "cd ${PP}/${PPS}; scripts/bootstrap"
+    sudo chroot --userspec=$( id -u ):$( id -g ) ${BUILDCHROOT_DIR} \
+        sh -c "cd ${PP}/${PPS}; scripts/bootstrap"
 }

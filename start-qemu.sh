@@ -57,7 +57,7 @@ case "$1" in
 		;;
 esac
 
-IMAGE_PREFIX="$(dirname $0)/build/tmp/deploy/images/demo-image-qemu-${DISTRO_ARCH}-xenomai-demo-qemu-${DISTRO_ARCH}"
+IMAGE_PREFIX="$(dirname $0)/build/tmp/deploy/images/qemu-${DISTRO_ARCH}/demo-image-qemu-${DISTRO_ARCH}-xenomai-demo-qemu-${DISTRO_ARCH}"
 IMAGE_FILE=$(ls ${IMAGE_PREFIX}.ext4.img)
 
 KERNEL_FILE=$(ls ${IMAGE_PREFIX}.vmlinuz* | tail -1)

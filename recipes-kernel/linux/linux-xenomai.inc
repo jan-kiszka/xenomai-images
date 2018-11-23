@@ -34,7 +34,7 @@ dpkg_runbuild_prepend() {
 		exit 1
 	esac
 
-	sudo chroot ${BUILDCHROOT_DIR} \
+	sudo chroot --userspec=$( id -u ):$( id -g ) ${BUILDCHROOT_DIR} \
 		/usr/src/xenomai-kernel-source/scripts/prepare-kernel.sh \
 			--linux=${PP}/${PPS} --arch=$ARCH
 }

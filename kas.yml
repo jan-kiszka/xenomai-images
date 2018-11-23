@@ -19,14 +19,10 @@ repos:
 
   isar:
     url: https://github.com/ilbers/isar
-    refspec: be291cd991bd64051f5e34af24b04feddaaea48c
+    refspec: 1e24c4b477142925834eee29a4b5cdb317599a29
     layers:
       meta:
       meta-isar:
-    patches:
-      fixes:
-        repo: xenomai
-        path: isar-patches/0001-linux-custom-Update-isar-apt-prior-to-installing-bui.patch
 
 bblayers_conf_header:
   standard: |
