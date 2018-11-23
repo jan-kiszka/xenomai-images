@@ -12,10 +12,7 @@
 require xenomai.inc
 
 SRC_URI = " \
-    git://gitlab.denx.de/Xenomai/xenomai.git;protocol=https;branch=next \
-    file://0001-debian-Add-config-folder-to-xenomai-kernel-source.patch \
-    file://0002-debian-Add-arm64-as-target-architecture.patch \
-    file://0003-debian-Enable-SMP-in-userspace-package.patch"
+    git://gitlab.denx.de/Xenomai/xenomai.git;protocol=https;branch=next"
 SRCREV = "next"
 PV = "9999-next"
 
