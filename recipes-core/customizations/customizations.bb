@@ -21,13 +21,9 @@ SRC_URI = " \
 DEBIAN_DEPENDS = "passwd"
 
 do_install() {
-	sudo rm -rf ${D}/etc ${D}/root
-
 	install -v -d ${D}/etc/network/interfaces.d
 	install -v -m 644 ${WORKDIR}/ethernet ${D}/etc/network/interfaces.d/
 
 	install -v -d ${D}/etc/sysctl.d
 	install -v -m 644 ${WORKDIR}/99-silent-printk.conf ${D}/etc/sysctl.d/
-
-	sudo chown -R root:root ${D}/etc
 }
