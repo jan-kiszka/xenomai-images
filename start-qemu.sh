@@ -48,6 +48,20 @@ case "$1" in
 		KERNEL_CMDLINE=" \
 			root=/dev/vda"
 		;;
+	arm|armhf)
+		DISTRO_ARCH=armhf
+		QEMU=qemu-system-arm
+		QEMU_EXTRA_ARGS=" \
+			-cpu cortex-a15 \
+			-smp 4 \
+			-machine virt \
+			-device virtio-serial-device \
+			-device virtconsole,chardev=con -chardev vc,id=con \
+			-device virtio-blk-device,drive=disk \
+			-device virtio-net-device,netdev=net"
+		KERNEL_CMDLINE=" \
+			root=/dev/vda"
+		;;
 	""|--help)
 		usage
 		;;

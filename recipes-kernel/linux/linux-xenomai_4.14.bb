@@ -19,4 +19,8 @@ SRC_URI_append_arm64 = " git://gitlab.denx.de/Xenomai/ipipe-arm64.git;protocol=h
 SRCREV_arm64 = "d24e3f9e425af92f4a181306d22d4b799e71a370"
 PV_arm64 = "4.14.71+"
 
+SRC_URI_append_armhf = " git://gitlab.denx.de/Xenomai/ipipe-arm.git;protocol=https;branch=stable/4.14.71-arm"
+SRCREV_armhf = "b7600fd089fdcbd5aae5385b42498259924ca2fb"
+PV_armhf = "4.14.71+"
+
 S = "${WORKDIR}/git"
