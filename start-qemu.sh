@@ -71,11 +71,7 @@ case "$1" in
 		;;
 esac
 
-IMAGE_PREFIX="$(dirname $0)/build/tmp/deploy/images/qemu-${DISTRO_ARCH}/demo-image-qemu-${DISTRO_ARCH}-xenomai-demo-qemu-${DISTRO_ARCH}"
-IMAGE_FILE=$(ls ${IMAGE_PREFIX}.ext4.img)
-
-KERNEL_FILE=$(ls ${IMAGE_PREFIX}.vmlinuz* | tail -1)
-INITRD_FILE=$(ls ${IMAGE_PREFIX}.initrd.img* | tail -1)
+IMAGE_PREFIX="$(dirname $0)/build/tmp/deploy/images/qemu-${DISTRO_ARCH}/demo-image-xenomai-demo-qemu-${DISTRO_ARCH}"
 
 if [ -z "${DISPLAY}" ]; then
 	QEMU_EXTRA_ARGS="${QEMU_EXTRA_ARGS} -nographic"
@@ -84,7 +80,7 @@ fi
 shift 1
 
 ${QEMU_PATH}${QEMU} \
-	-drive file=${IMAGE_FILE},discard=unmap,if=none,id=disk,format=raw \
+	-drive file=${IMAGE_PREFIX}.ext4.img,discard=unmap,if=none,id=disk,format=raw \
 	-m 1G -serial mon:stdio -netdev user,id=net \
-	-kernel ${KERNEL_FILE} -append "${KERNEL_CMDLINE}" \
-	-initrd ${INITRD_FILE} ${QEMU_EXTRA_ARGS} "$@"
+	-kernel ${IMAGE_PREFIX}-vmlinuz -append "${KERNEL_CMDLINE}" \
+	-initrd ${IMAGE_PREFIX}-initrd.img ${QEMU_EXTRA_ARGS} "$@"

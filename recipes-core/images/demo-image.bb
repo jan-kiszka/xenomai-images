@@ -9,11 +9,9 @@
 # SPDX-License-Identifier: MIT
 #
 
-PN = "demo-image-${MACHINE}"
+inherit image
 
-require recipes-core/images/isar-image-base.bb
-
-ISAR_RELEASE_CMD = "git -C ${LAYERDIR_xenomai} describe --tags --dirty --match 'v[0-9].[0-9]*'"
+ISAR_RELEASE_CMD = "git -C ${LAYERDIR_xenomai} describe --tags --dirty --always --match 'v[0-9].[0-9]*'"
 DESCRIPTION = "Xenomai demo and test image"
 
 IMAGE_PREINSTALL += " \

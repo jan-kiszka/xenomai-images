@@ -13,16 +13,16 @@ header:
   version: 8
 
 distro: xenomai-demo
+target: demo-image
 
 repos:
   xenomai:
 
   isar:
     url: https://github.com/ilbers/isar
-    refspec: 1e24c4b477142925834eee29a4b5cdb317599a29
+    refspec: 59c7dd2b8b3172d53de1c7a39fbd49751193559a
     layers:
       meta:
-      meta-isar:
 
 bblayers_conf_header:
   standard: |
