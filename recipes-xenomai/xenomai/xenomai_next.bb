@@ -13,15 +13,9 @@ require xenomai.inc
 
 SRC_URI = " \
     git://gitlab.denx.de/Xenomai/xenomai.git;protocol=https;branch=next"
-SRCREV = "next"
-PV = "9999-next"
+SRCREV = "${AUTOREV}" 
+PV = "next"
 
 S = "${WORKDIR}/git"
 
-dpkg_runbuild_prepend() {
-    bbplain $(printf "xenomai-next: Building revision %.12s\n" \
-                     $(cat ${S}/.git/refs/heads/next))
 
-    sudo chroot --userspec=$( id -u ):$( id -g ) ${BUILDCHROOT_DIR} \
-        sh -c "cd ${PP}/${PPS}; scripts/bootstrap"
-}
