@@ -1,0 +1,16 @@
+#
+# Xenomai Real-Time System
+#
+# Copyright (c) Siemens AG, 2019
+#
+# Authors:
+#  Quirin Gylstorff <quirin.gylstorff@siemens.com>
+#
+# SPDX-License-Identifier: MIT
+#
+
+part /boot --source bootimg-efi-isar --sourceparams "loader=grub-efi" --ondisk sda --label efi --part-type EF00 --align 1024
+
+part / --source rootfs --ondisk sda --fstype ext4 --label platform --align 1024 --use-uuid
+
+bootloader --ptable gpt --timeout=2 --append "rw rootwait console=ttyS0,115200"
