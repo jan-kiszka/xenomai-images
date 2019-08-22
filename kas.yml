@@ -36,4 +36,4 @@ local_conf_header:
   cross: |
     ISAR_CROSS_COMPILE = "1"
   xenomai-version: |
-    PREFERRED_VERSION_xenomai = "stable"
+    PREFERRED_VERSION_xenomai ?= "stable"
