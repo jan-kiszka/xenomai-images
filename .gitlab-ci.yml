@@ -1,0 +1,27 @@
+variables:
+  GIT_STRATEGY: clone
+variables:
+  http_proxy: "$HTTP_PROXY"
+  https_proxy: "$HTTPS_PROXY"
+  ftp_proxy: "$FTP_PROXY"
+  no_proxy: "$NO_PROXY"
+build:amd64:
+  stage: build
+  image: kasproject/kas-isar:latest
+  script:
+    - kas build kas.yml:board-qemu-amd64.yml
+build:armhf:
+  stage: build
+  image: kasproject/kas-isar:latest
+  script:
+    - kas build kas.yml:board-qemu-armhf.yml
+build:arm64:
+  stage: build
+  image: kasproject/kas-isar:latest
+  script:
+    - kas build kas.yml:board-qemu-arm64.yml
+build:hikey:
+  stage: build
+  image: kasproject/kas-isar:latest
+  script:
+    - kas build kas.yml:board-hikey.yml

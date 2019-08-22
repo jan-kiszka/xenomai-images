@@ -36,6 +36,18 @@ Physical targets will generate ready-to-boot images under
     dd if=build/tmp/deploy/images/hikey/demo-image-hikey-xenomai-demo-hikey.wic.img \
        of=/dev/<medium-device> bs=1M status=progress
 
+## CI Build
+
+The CI build can be executed locally by
+[installing the gitlab-runner](https://docs.gitlab.com/runner/install/).
+
+To execute the CI build use:
+```
+gitlab-runner exec docker --docker-privileged \
+  --env "HTTP_PROXY=$HTTP_PROXY" --env "HTTPS_PROXY=$HTTPS_PROXY" \
+  --env "NO_PROXY=$NO_PROXY" build:armhf
+```
+
 ## Community Resources
 
 See [Xenomai project](https://www.xenomai.org/).
