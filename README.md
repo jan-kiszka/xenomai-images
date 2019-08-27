@@ -30,7 +30,12 @@ The QEMU ARM64 target is selected by `... kas.yml:board-qemu-arm64.yml` and
 started via `start-qemu.sh arm64`. Make sure to have `qemu-aarch64-system`
 installed.
 
-Physical targets will generate ready-to-boot images under
+### Physical Targets
+
+This repository contains recipes for x86 (`board-simatic-ipc227e`),
+armhf(`board-beagle-bone-black`) and arm64(`board-hikey`) targets.
+
+Each physical target will generate ready-to-boot images under
 `build/tmp/deploy/images/`. To flash, e.g., the HiKey image to an SD card, run
 
     dd if=build/tmp/deploy/images/hikey/demo-image-hikey-xenomai-demo-hikey.wic.img \
