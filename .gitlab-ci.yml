@@ -5,23 +5,33 @@ variables:
   https_proxy: "$HTTPS_PROXY"
   ftp_proxy: "$FTP_PROXY"
   no_proxy: "$NO_PROXY"
-build:amd64:
+build:qemu-amd64:
   stage: build
   image: kasproject/kas-isar:latest
   script:
     - kas build kas.yml:board-qemu-amd64.yml
-build:armhf:
+build:qemu-armhf:
   stage: build
   image: kasproject/kas-isar:latest
   script:
     - kas build kas.yml:board-qemu-armhf.yml
-build:arm64:
+build:qemu-arm64:
   stage: build
   image: kasproject/kas-isar:latest
   script:
     - kas build kas.yml:board-qemu-arm64.yml
-build:hikey:
+build:board-hikey:
   stage: build
   image: kasproject/kas-isar:latest
   script:
     - kas build kas.yml:board-hikey.yml
+build:board-beaglebone:
+  stage: build
+  image: kasproject/kas-isar:latest
+  script:
+    - kas build kas.yml:board-beagle-bone-black.yml
+build:board-x86-64-efi:
+  stage: build
+  image: kasproject/kas-isar:latest
+  script:
+    - kas build kas.yml:board-x86-64-efi.yml
