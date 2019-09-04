@@ -19,7 +19,7 @@ repos:
   xenomai:
 
   isar:
-    url: https://github.com/ilbers/isar
+    url: https://github.com/ilbers/isar.git
     refspec: 59c7dd2b8b3172d53de1c7a39fbd49751193559a
     layers:
       meta:
