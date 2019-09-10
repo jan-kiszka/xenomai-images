@@ -50,7 +50,7 @@ To execute the CI build use:
 ```
 gitlab-runner exec docker --docker-privileged \
   --env "HTTP_PROXY=$HTTP_PROXY" --env "HTTPS_PROXY=$HTTPS_PROXY" \
-  --env "NO_PROXY=$NO_PROXY" build:armhf
+  --env "NO_PROXY=$NO_PROXY" build:qemu-armhf
 ```
 
 ## Community Resources
