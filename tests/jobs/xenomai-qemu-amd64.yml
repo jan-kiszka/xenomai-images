@@ -1,0 +1,76 @@
+#
+# Xenomai Real-Time System
+#
+# Copyright (c) Siemens AG, 2019
+#
+# Authors:
+#  Quirin Gylstorff <quirin.gylstorff@siemens.com>
+#
+# SPDX-License-Identifier: MIT
+#
+device_type: qemu
+job_name: QEMU pipeline, xenomai-images-qemu-amd64
+
+timeouts:
+  job:
+    minutes: 15
+  action:
+    minutes: 5
+  connection:
+    minutes: 2
+priority: medium
+visibility: public
+
+# context allows specific values to be overridden or included
+context:
+  # tell the qemu template which architecture is being tested
+  # the template uses that to ensure that qemu-system-x86_64 is executed.
+  arch: amd64
+  extra_options:
+  - -smp
+  -  4
+  - -nographic
+  - -enable-kvm
+  - -machine q35
+  - -device ide-hd,drive=disk
+metadata:
+  # please change these fields when modifying this job for your own tests.
+  docs-source: xenomai-qemu-amd64
+  docs-filename: qemu-pipeline-xenomai-amd64
+
+# ACTION_BLOCK
+actions:
+- deploy:
+    timeout:
+      minutes: 5
+    to: tmpfs
+    images:
+      kernel:
+        image_arg: -kernel {kernel} -append "root=/dev/sdb console=ttyS0,115200 console=tty0"
+        url: http://localhost/artifacts/demo-image-xenomai-demo-qemu-amd64-vmlinuz
+      initrd:
+        image_arg: -initrd {initrd}
+        url: http://localhost/artifacts/demo-image-xenomai-demo-qemu-amd64-initrd.img
+      rootfs:
+        image_arg: -drive file={rootfs},discard=unmap,if=none,id=disk,format=raw
+        url: http://localhost/artifacts/demo-image-xenomai-demo-qemu-amd64.ext4.img
+
+# BOOT_BLOCK
+- boot:
+    timeout:
+      minutes: 2
+    method: qemu
+    media: tmpfs
+    prompts: ["root@demo:"]
+    auto_login:
+      login_prompt: 'demo login:'
+      username: root
+      password_prompt: 'Password:'
+      password: root
+
+- test:
+    definitions:
+    - repository: http://git.linaro.org/lava-team/lava-functional-tests.git
+      from: git
+      path: lava-test-shell/smoke-tests-basic.yaml
+      name: smoke-tests

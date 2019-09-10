@@ -1,0 +1,63 @@
+#
+# Xenomai Real-Time System
+#
+# Copyright (c) Siemens AG, 2019
+#
+# Authors:
+#  Quirin Gylstorff <quirin.gylstorff@siemens.com>
+#
+# SPDX-License-Identifier: MIT
+#
+job_name: xenomai-test-suite
+device_type: x86
+
+timeouts:
+  job:
+    minutes: 30
+  action:
+    minutes: 20
+  connection:
+    minutes: 2
+priority: medium
+visibility: public
+
+metadata:
+  # please change these fields when modifying this job for your own tests.
+  docs-source: xenomai-cof
+  docs-filename: pipeline-xenomai-cof
+# ACTION_BLOCK
+actions:
+- deploy:
+    timeout:
+      minutes: 5
+    to: tftp
+    kernel:
+      url: http://localhost/artifacts/demo-image-xenomai-demo-x86-64-efi-vmlinuz
+      type: bzimage
+    ramdisk:
+      url: http://localhost/artifacts/demo-image-xenomai-demo-x86-64-efi-initrd.img
+      compression: gz
+    nfsrootfs:
+      url: http://localhost/artifacts/demo-image-xenomai-demo-x86-64-efi.tar.gz
+      compression: gz
+# BOOT_BLOCK
+- boot:
+    timeout:
+      minutes: 5
+    method: ipxe
+    commands: nfs
+    prompts: ["root@demo:"]
+    auto_login:
+      login_prompt: 'demo login:'
+      username: root
+      password_prompt: 'Password:'
+      password: root
+
+- test:
+    timeout:
+      minutes: 30
+    definitions:
+    - repository: http://git.linaro.org/lava-team/lava-functional-tests.git
+      from: git
+      path: lava-test-shell/smoke-tests-basic.yaml
+      name: smoke-tests

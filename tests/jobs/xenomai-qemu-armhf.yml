@@ -1,0 +1,76 @@
+#
+# Xenomai Real-Time System
+#
+# Copyright (c) Siemens AG, 2019
+#
+# Authors:
+#  Quirin Gylstorff <quirin.gylstorff@siemens.com>
+#
+# SPDX-License-Identifier: MIT
+#
+device_type: qemu
+job_name: QEMU pipeline, xenomai-images-qemu-armhf
+
+timeouts:
+  job:
+    minutes: 15
+  action:
+    minutes: 5
+  connection:
+    minutes: 2
+priority: medium
+visibility: public
+
+# context allows specific values to be overridden or included
+context:
+  arch: arm
+  cpu: cortex-a15
+  extra_options:
+  - -smp 4
+  - -device virtio-serial-device
+  - -device virtconsole,chardev=con
+  - -chardev vc,id=con
+  - -device virtio-blk-device,bootindex=0,drive=disk
+  - -device virtio-blk-device,bootindex=1,drive=lavatest
+  guestfs_interface: none
+metadata:
+  # please change these fields when modifying this job for your own tests.
+  docs-source: xenomai-qemu-armhf
+  docs-filename: qemu-pipeline-xenomai-armhf
+
+# ACTION_BLOCK
+actions:
+- deploy:
+    timeout:
+      minutes: 5
+    to: tmpfs
+    images:
+      kernel:
+        image_arg: -kernel {kernel} -append "root=/dev/vdb"
+        url: http://localhost/artifacts/demo-image-xenomai-demo-qemu-armhf-vmlinuz
+      initrd:
+        image_arg: -initrd {initrd}
+        url: http://localhost/artifacts/demo-image-xenomai-demo-qemu-armhf-initrd.img
+      rootfs:
+        image_arg: -drive file={rootfs},discard=unmap,if=none,id=disk,format=raw
+        url: http://localhost/artifacts/demo-image-xenomai-demo-qemu-armhf.ext4.img
+
+# BOOT_BLOCK
+- boot:
+    timeout:
+      minutes: 5
+    method: qemu
+    media: tmpfs
+    prompts: ["root@demo:"]
+    auto_login:
+      login_prompt: 'demo login:'
+      username: root
+      password_prompt: 'Password:'
+      password: root
+
+- test:
+    definitions:
+    - repository: http://git.linaro.org/lava-team/lava-functional-tests.git
+      from: git
+      path: lava-test-shell/smoke-tests-basic.yaml
+      name: smoke-tests

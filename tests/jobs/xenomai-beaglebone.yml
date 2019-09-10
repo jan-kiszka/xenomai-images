@@ -1,0 +1,65 @@
+#
+# Xenomai Real-Time System
+#
+# Copyright (c) Siemens AG, 2019
+#
+# Authors:
+#  Quirin Gylstorff <quirin.gylstorff@siemens.com>
+#
+# SPDX-License-Identifier: MIT
+#
+job_name: xenomai-test-suite
+device_type: beaglebone-black
+
+timeouts:
+  job:
+    minutes: 30
+  action:
+    minutes: 20
+  connection:
+    minutes: 2
+priority: medium
+visibility: public
+
+metadata:
+  # please change these fields when modifying this job for your own tests.
+  docs-source: xenomai-beagleboneblack
+  docs-filename: pipeline-xenomai-beagleboneblack
+context:
+  console_device: ttyO
+  baud_rate: 115200
+# ACTION_BLOCK
+actions:
+- deploy:
+    timeout:
+      minutes: 5
+    to: tftp
+    kernel:
+      url: http://localhost/artifacts/demo-image-xenomai-demo-beagle-bone-black-vmlinuz
+      type: zimage
+    dtb:
+      url: http://localhost/artifacts/am335x-boneblack.dtb
+    nfsrootfs:
+      url: http://localhost/artifacts/demo-image-xenomai-demo-beagle-bone-black.tar.gz
+      compression: gz
+# BOOT_BLOCK
+- boot:
+    timeout:
+      minutes: 5
+    method: u-boot
+    commands: nfs
+    prompts: ["root@demo:"]
+    auto_login:
+      login_prompt: 'demo login:'
+      username: root
+      password_prompt: 'Password:'
+      password: root
+
+- test:
+    timeout:
+      minutes: 30
+    definitions:
+    - repository: http://git.linaro.org/lava-team/lava-functional-tests.git
+      from: git
+      path: lava-test-shell/smoke-tests-basic.yaml
+      name: smoke-tests

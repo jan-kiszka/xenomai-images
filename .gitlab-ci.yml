@@ -1,37 +1,117 @@
+#
+# Xenomai Real-Time System
+#
+# Copyright (c) Siemens AG, 2019
+#
+# Authors:
+#  Quirin Gylstorff <quirin.gylstorff@siemens.com>
+#
+# SPDX-License-Identifier: MIT
+#
+stages:
+  - build
+  - lava-test
 variables:
   GIT_STRATEGY: clone
-variables:
   http_proxy: "$HTTP_PROXY"
   https_proxy: "$HTTPS_PROXY"
   ftp_proxy: "$FTP_PROXY"
   no_proxy: "$NO_PROXY"
-build:qemu-amd64:
-  stage: build
+default:
   image: kasproject/kas-isar:latest
+
+# add lavacli to the container and install the ssh keys
+# for the test infrastructure
+.add-lava-ssh-config: &lava-ssh-key
+  before_script:
+    - sudo apt update
+    - sudo apt install lavacli -y
+    - mkdir -p -m=700 ~/.ssh
+    - echo "$LAVA_UPLOAD_KEY" | tr -d '\r' > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+    - echo "ProxyCommand socat - PROXY:$(echo $https_proxy | sed 's|.*://\([^:]*\).*|\1|'):%h:%p,proxyport=$(echo $https_proxy | sed 's|.*:\([0-9]*\)$|\1|')" >> ~/.ssh/config && chmod 600 ~/.ssh/config
+    - echo "$LAVA_KNOWN_HOST" >> ~/.ssh/known_hosts && chmod 644 ~/.ssh/known_hosts
+
+build:qemu-amd64:
+  <<: *lava-ssh-key
+  stage: build
   script:
     - kas build kas.yml:board-qemu-amd64.yml
+    - scripts/deploy_for_testing.sh qemu-amd64
+
+lava-test:qemu-amd64:
+  <<: *lava-ssh-key
+  stage: lava-test
+  script:
+     - scripts/run-lava-tests.sh qemu-amd64
+  only:
+    variables:
+      - $LAVA_USER
+
 build:qemu-armhf:
   stage: build
-  image: kasproject/kas-isar:latest
   script:
     - kas build kas.yml:board-qemu-armhf.yml
+    - scripts/deploy_for_testing.sh qemu-armhf
+
+lava-test:qemu-armhf:
+  <<: *lava-ssh-key
+  stage: lava-test
+  script:
+    - scripts/run-lava-tests.sh qemu-armhf
+  only:
+    variables:
+      - $LAVA_USER
+
 build:qemu-arm64:
+  <<: *lava-ssh-key
   stage: build
-  image: kasproject/kas-isar:latest
   script:
     - kas build kas.yml:board-qemu-arm64.yml
+    - scripts/deploy_for_testing.sh qemu-arm64
+
+lava-test:qemu-arm64:
+  <<: *lava-ssh-key
+  stage: lava-test
+  script:
+    - scripts/run-lava-tests.sh qemu-arm64
+  only:
+    variables:
+      - $LAVA_USER
+
 build:board-hikey:
   stage: build
-  image: kasproject/kas-isar:latest
   script:
     - kas build kas.yml:board-hikey.yml
+# hikey is currently not part of the testlab
+
 build:board-beaglebone:
+  <<: *lava-ssh-key
   stage: build
-  image: kasproject/kas-isar:latest
   script:
     - kas build kas.yml:board-beagle-bone-black.yml
+    - scripts/deploy_for_testing.sh beagle-bone-black
+
+lava-test:board-beaglebone:
+  <<: *lava-ssh-key
+  stage: lava-test
+  script:
+    - scripts/run-lava-tests.sh beaglebone
+  only:
+    variables:
+      - $LAVA_USER
+
 build:board-x86-64-efi:
+  <<: *lava-ssh-key
   stage: build
-  image: kasproject/kas-isar:latest
   script:
     - kas build kas.yml:board-x86-64-efi.yml
+    - scripts/deploy_for_testing.sh x86-64-efi
+
+lava-test:board-x86-64-efi:
+  <<: *lava-ssh-key
+  stage: lava-test
+  script:
+    - scripts/run-lava-tests.sh x86-64
+  only:
+    variables:
+      - $LAVA_USER
