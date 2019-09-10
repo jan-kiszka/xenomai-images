@@ -17,8 +17,13 @@ following images are test:
 
 Currently the following tests are executed on each target:
 - lava-smoketest
+- xenomai-test-suite
 
 ### lava-smoketest
 
 The lava smoke tests are part of http://git.linaro.org/lava-team/lava-functional-tests.git
 and check machine data from the target.
+
+### xenomai-test-suite
+
+The xenomai test suite executes the xeno-test tool from xenomai/testsuite.

@@ -60,3 +60,14 @@ actions:
       from: git
       path: lava-test-shell/smoke-tests-basic.yaml
       name: smoke-tests
+    - repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: xenomai-test-suite
+          description: "runs the xenomai test suite"
+        run:
+          steps:
+            - lava-test-case xenomai-test --shell xeno-test -k -l \"dohell -m /tmp 300\" -p 1000
+      from: inline
+      path: inline/xenomai-test-suite.yaml
+      name: xenomai-test-suite
