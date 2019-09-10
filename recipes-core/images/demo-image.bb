@@ -17,7 +17,7 @@ DESCRIPTION = "Xenomai demo and test image"
 IMAGE_PREINSTALL += " \
     bash-completion less vim nano man \
     ifupdown isc-dhcp-client net-tools iputils-ping ssh \
-    iw wireless-tools wpasupplicant \
+    iw wireless-tools wpasupplicant dbus \
     gdb"
 
 IMAGE_INSTALL += "xenomai-runtime"
