@@ -11,6 +11,7 @@
 stages:
   - build
   - lava-test
+
 variables:
   GIT_STRATEGY: clone
   http_proxy: "$HTTP_PROXY"
@@ -43,6 +44,7 @@ lava-test:qemu-amd64:
   stage: lava-test
   script:
      - scripts/run-lava-tests.sh qemu-amd64
+  needs: [ "build:qemu-amd64" ]
   only:
     variables:
       - $LAVA_USER
@@ -58,6 +60,7 @@ lava-test:qemu-armhf:
   stage: lava-test
   script:
     - scripts/run-lava-tests.sh qemu-armhf
+  needs: [ "build:qemu-armhf" ]
   only:
     variables:
       - $LAVA_USER
@@ -74,6 +77,7 @@ lava-test:qemu-arm64:
   stage: lava-test
   script:
     - scripts/run-lava-tests.sh qemu-arm64
+  needs: [ "build:qemu-arm64" ]
   only:
     variables:
       - $LAVA_USER
@@ -96,6 +100,7 @@ lava-test:board-beaglebone:
   stage: lava-test
   script:
     - scripts/run-lava-tests.sh beaglebone
+  needs: [ "build:board-beaglebone" ]
   only:
     variables:
       - $LAVA_USER
@@ -112,6 +117,7 @@ lava-test:board-x86-64-efi:
   stage: lava-test
   script:
     - scripts/run-lava-tests.sh x86-64
+  needs: [ "build:board-x86-64-efi" ]
   only:
     variables:
       - $LAVA_USER
