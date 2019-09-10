@@ -35,6 +35,50 @@ and check machine data from the target.
 
 The xenomai test suite executes the xeno-test tool from xenomai/testsuite.
 
+# Test Architecture
+
+To test xenomai-images on the target hardware the following architecture
+is used:
+```
+                                                               +----------+
+                                                               | Target 1 |
+                                                            /--|  beagle  |
++-----------+        +---------+       +---------+    /-----   |  bone    |
+|           |        | LAVA    |       | LAVA    | ---         +----------+
+| gitlab-   | ------ | master  |------ | Dis-    | --
+| runner    |        |         |       | patcher | \ \---      +----------+
++-----------+        +---------+       +---------+  \-   \---  | Target 2 |
+                                                      \      \-| x86-64   |
+                                                       \       |          |
+                                                        \-     +----------+
+                                                          \
+                                                           \   +----------+
+                                                            \- | Target n |
+                                                              \| qemu     |
+                                                               |          |
+                                                               +----------+
+```
+A test is deployed in the following steps:
+1. gitlab-runner: builds the artifacts
+2. After the build is successful the build artifacts are deployed to the
+   Lava master per scp.
+3. The runner sends a lava job description to the LAVA master, who triggers the
+job execution on LAVA Dispatcher.
+
+The LAVA master selects the LAVA Dispatcher to execute the given job on a
+target. Qemu targets are executed directly on the LAVA Dispatcher. For non-virtual
+targets the payload (kernel,rootfs,...) is deployed via tftp to the selected
+hardware.
+
+The dispatcher executes the following steps:
+1. Instrumentation of the rootfs. This will collect the necessary lavatools
+and adds them to the rootfs
+2. Power up the target
+3. deploy the payload(kernel,rootfs,...) with help of the bootloader
+4. trigger the payload boot
+5. execute the tests
+6. power off the target
+
 # LAVA Setup
 
 Setup a lava environment by following the
