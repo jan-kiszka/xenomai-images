@@ -85,14 +85,14 @@ lava-test:qemu-arm64:
 build:board-hikey:
   stage: build
   script:
-    - kas build kas.yml:board-hikey.yml
+    - kas build kas.yml:board-hikey.yml:opt-latest.yml
 # hikey is currently not part of the testlab
 
 build:board-beaglebone:
   <<: *lava-ssh-key
   stage: build
   script:
-    - kas build kas.yml:board-beagle-bone-black.yml:opt-lava-test.yml
+    - kas build kas.yml:board-beagle-bone-black.yml:opt-latest.yml:opt-lava-test.yml
     - scripts/deploy_for_testing.sh beagle-bone-black
 
 lava-test:board-beaglebone:
@@ -109,7 +109,7 @@ build:board-x86-64-efi:
   <<: *lava-ssh-key
   stage: build
   script:
-    - kas build kas.yml:board-x86-64-efi.yml:opt-lava-test.yml
+    - kas build kas.yml:board-x86-64-efi.yml:opt-latest.yml:opt-lava-test.yml
     - scripts/deploy_for_testing.sh x86-64-efi
 
 lava-test:board-x86-64-efi:
