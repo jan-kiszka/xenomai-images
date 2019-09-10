@@ -92,7 +92,7 @@ build:board-beaglebone:
   <<: *lava-ssh-key
   stage: build
   script:
-    - kas build kas.yml:board-beagle-bone-black.yml
+    - kas build kas.yml:board-beagle-bone-black.yml:opt-lava-test.yml
     - scripts/deploy_for_testing.sh beagle-bone-black
 
 lava-test:board-beaglebone:
@@ -109,7 +109,7 @@ build:board-x86-64-efi:
   <<: *lava-ssh-key
   stage: build
   script:
-    - kas build kas.yml:board-x86-64-efi.yml
+    - kas build kas.yml:board-x86-64-efi.yml:opt-lava-test.yml
     - scripts/deploy_for_testing.sh x86-64-efi
 
 lava-test:board-x86-64-efi:
