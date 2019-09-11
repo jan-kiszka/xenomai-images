@@ -20,5 +20,5 @@ IMAGE_PREINSTALL += " \
     iw wireless-tools wpasupplicant dbus \
     gdb lsb-release"
 
-IMAGE_INSTALL += "xenomai-runtime"
+IMAGE_INSTALL += "xenomai-runtime xenomai-runtime-dbgsym libxenomai1-dbgsym"
 IMAGE_INSTALL += "customizations expand-on-first-boot"
