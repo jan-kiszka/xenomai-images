@@ -21,4 +21,4 @@ IMAGE_PREINSTALL += " \
     gdb lsb-release"
 
 IMAGE_INSTALL += "xenomai-runtime xenomai-runtime-dbgsym libxenomai1-dbgsym"
-IMAGE_INSTALL += "customizations expand-on-first-boot"
+IMAGE_INSTALL += "customizations sshd-regen-keys expand-on-first-boot"
