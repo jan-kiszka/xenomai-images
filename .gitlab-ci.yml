@@ -25,8 +25,6 @@ default:
 # for the test infrastructure
 .add-lava-ssh-config: &lava-ssh-key
   before_script:
-    - sudo apt update
-    - sudo apt install lavacli -y
     - mkdir -p -m=700 ~/.ssh
     - echo "$LAVA_UPLOAD_KEY" | tr -d '\r' > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
     - echo "ProxyCommand socat - PROXY:$(echo $https_proxy | sed 's|.*://\([^:]*\).*|\1|'):%h:%p,proxyport=$(echo $https_proxy | sed 's|.*:\([0-9]*\)$|\1|')" >> ~/.ssh/config && chmod 600 ~/.ssh/config
@@ -43,13 +41,15 @@ lava-test:qemu-amd64:
   <<: *lava-ssh-key
   stage: lava-test
   script:
-     - scripts/run-lava-tests.sh qemu-amd64
+    - scripts/install-lavacli.sh
+    - scripts/run-lava-tests.sh qemu-amd64
   needs: [ "build:qemu-amd64" ]
   only:
     variables:
       - $LAVA_USER
 
 build:qemu-armhf:
+  <<: *lava-ssh-key
   stage: build
   script:
     - kas build kas.yml:board-qemu-armhf.yml
@@ -59,6 +59,7 @@ lava-test:qemu-armhf:
   <<: *lava-ssh-key
   stage: lava-test
   script:
+    - scripts/install-lavacli.sh
     - scripts/run-lava-tests.sh qemu-armhf
   needs: [ "build:qemu-armhf" ]
   only:
@@ -76,6 +77,7 @@ lava-test:qemu-arm64:
   <<: *lava-ssh-key
   stage: lava-test
   script:
+    - scripts/install-lavacli.sh
     - scripts/run-lava-tests.sh qemu-arm64
   needs: [ "build:qemu-arm64" ]
   only:
@@ -83,9 +85,11 @@ lava-test:qemu-arm64:
       - $LAVA_USER
 
 build:board-hikey:
+  <<: *lava-ssh-key
   stage: build
   script:
-    - kas build kas.yml:board-hikey.yml:opt-latest.yml
+    - kas build kas.yml:board-hikey.yml:opt-latest.yml:opt-lava-test.yml
+    - scripts/deploy_for_testing.sh hikey
 # hikey is currently not part of the testlab
 
 build:board-beaglebone:
@@ -99,6 +103,7 @@ lava-test:board-beaglebone:
   <<: *lava-ssh-key
   stage: lava-test
   script:
+    - scripts/install-lavacli.sh
     - scripts/run-lava-tests.sh beaglebone
   needs: [ "build:board-beaglebone" ]
   only:
@@ -116,6 +121,7 @@ lava-test:board-x86-64-efi:
   <<: *lava-ssh-key
   stage: lava-test
   script:
+    - scripts/install-lavacli.sh
     - scripts/run-lava-tests.sh x86-64
   needs: [ "build:board-x86-64-efi" ]
   only:
