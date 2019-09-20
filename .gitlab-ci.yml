@@ -18,6 +18,7 @@ variables:
   https_proxy: "$HTTPS_PROXY"
   ftp_proxy: "$FTP_PROXY"
   no_proxy: "$NO_PROXY"
+  BUILD_OPTIONS: "opt-xenomai-next.yml"
 default:
   image: kasproject/kas-isar:latest
 
@@ -34,7 +35,7 @@ build:qemu-amd64:
   <<: *lava-ssh-key
   stage: build
   script:
-    - kas build kas.yml:board-qemu-amd64.yml
+    - kas build kas.yml:board-qemu-amd64.yml:${BUILD_OPTIONS}
     - scripts/deploy_for_testing.sh qemu-amd64
 
 lava-test:qemu-amd64:
@@ -52,7 +53,7 @@ build:qemu-armhf:
   <<: *lava-ssh-key
   stage: build
   script:
-    - kas build kas.yml:board-qemu-armhf.yml
+    - kas build kas.yml:board-qemu-armhf.yml:${BUILD_OPTIONS}
     - scripts/deploy_for_testing.sh qemu-armhf
 
 lava-test:qemu-armhf:
@@ -70,7 +71,7 @@ build:qemu-arm64:
   <<: *lava-ssh-key
   stage: build
   script:
-    - kas build kas.yml:board-qemu-arm64.yml
+    - kas build kas.yml:board-qemu-arm64.yml:${BUILD_OPTIONS}
     - scripts/deploy_for_testing.sh qemu-arm64
 
 lava-test:qemu-arm64:
@@ -88,7 +89,7 @@ build:board-hikey:
   <<: *lava-ssh-key
   stage: build
   script:
-    - kas build kas.yml:board-hikey.yml:opt-latest.yml:opt-lava-test.yml
+    - kas build kas.yml:board-hikey.yml:opt-lava-test.yml:${BUILD_OPTIONS}
     - scripts/deploy_for_testing.sh hikey
 # hikey is currently not part of the testlab
 
@@ -96,7 +97,7 @@ build:board-beaglebone:
   <<: *lava-ssh-key
   stage: build
   script:
-    - kas build kas.yml:board-beagle-bone-black.yml:opt-latest.yml:opt-lava-test.yml
+    - kas build kas.yml:board-beagle-bone-black.yml:opt-lava-test.yml:${BUILD_OPTIONS}
     - scripts/deploy_for_testing.sh beagle-bone-black
 
 lava-test:board-beaglebone:
@@ -114,7 +115,7 @@ build:board-x86-64-efi:
   <<: *lava-ssh-key
   stage: build
   script:
-    - kas build kas.yml:board-x86-64-efi.yml:opt-latest.yml:opt-lava-test.yml
+    - kas build kas.yml:board-x86-64-efi.yml:opt-lava-test.yml:${BUILD_OPTIONS}
     - scripts/deploy_for_testing.sh x86-64-efi
 
 lava-test:board-x86-64-efi:

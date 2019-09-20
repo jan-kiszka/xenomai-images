@@ -23,6 +23,10 @@ repos:
     refspec: a5d575a15285b7f66efbf3e2409a7f65d25ff15e
     layers:
       meta:
+    patches:
+      latest-kernel:
+        repo: xenomai
+        path: patches/0001-recipes-kernel-linux-build-kernel-Allow-kernel-build.patch
 
 bblayers_conf_header:
   standard: |

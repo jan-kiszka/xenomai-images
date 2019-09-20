@@ -1,0 +1,173 @@
+From 3322d3f1a062b950510028ed50b2f807dc780d24 Mon Sep 17 00:00:00 2001
+From: Quirin Gylstorff <quirin.gylstorff@siemens.com>
+Date: Fri, 20 Sep 2019 13:44:56 +0200
+Subject: [PATCH] recipes-kernel/linux/build-kernel: Allow kernel build with
+ AUTOREV
+
+For testing it is sometimes necessary to build the HEAD of a kernel
+tree. If ${PV} is set to latest the check Packageversion equals
+KERNEL_VERSION is deactivated. To allow this build use the KV instead
+PV in the package generation.
+
+Signed-off-by: Quirin Gylstorff <quirin.gylstorff@siemens.com>
+---
+ .../linux/files/build-kernel.sh               | 81 ++++++++++---------
+ 1 file changed, 41 insertions(+), 40 deletions(-)
+
+diff --git a/meta/recipes-kernel/linux/files/build-kernel.sh b/meta/recipes-kernel/linux/files/build-kernel.sh
+index 8b7b23b..24ddd6a 100644
+--- a/meta/recipes-kernel/linux/files/build-kernel.sh
++++ b/meta/recipes-kernel/linux/files/build-kernel.sh
+@@ -12,24 +12,24 @@ source /isar/common.sh
+ host_arch=$(dpkg --print-architecture)
+ 
+ if [ "$host_arch" != "$target_arch" ]; then
+-    case $target_arch in
+-    armhf)
+-        export ARCH=arm
+-        export CROSS_COMPILE="arm-linux-gnueabihf-"
+-        ;;
+-    arm64)
+-        export ARCH=arm64
+-        export CROSS_COMPILE="aarch64-linux-gnu-"
+-        ;;
+-    mipsel)
+-        export ARCH=mips
+-        export CROSS_COMPILE="mipsel-linux-gnu-"
+-        ;;
+-    *)
+-        echo "error: unsupported architecture ($target_arch)"
+-        exit 1
+-        ;;
+-    esac
++		case $target_arch in
++		armhf)
++				export ARCH=arm
++				export CROSS_COMPILE="arm-linux-gnueabihf-"
++				;;
++		arm64)
++				export ARCH=arm64
++				export CROSS_COMPILE="aarch64-linux-gnu-"
++				;;
++		mipsel)
++				export ARCH=mips
++				export CROSS_COMPILE="mipsel-linux-gnu-"
++				;;
++		*)
++				echo "error: unsupported architecture ($target_arch)"
++				exit 1
++				;;
++		esac
+ fi
+ 
+ REPACK_DIR="$1/../repack"
+@@ -43,12 +43,13 @@ else
+ fi
+ 
+ KV=$( make -s kernelrelease )
+-if [ "${KV}" != "${PV}" ]; then
+-	echo "ERROR: Recipe PV is \"${PV}\" but should be \"${KV}\"" 1>&2
+-	echo "ERROR: Probably due to CONFIG_LOCALVERSION" 1>&2
+-	exit 1
++if [ "${PV}" != "latest" ]; then
++	if [ "${KV}" != "${PV}" ]; then
++		echo "ERROR: Recipe PV is \"${PV}\" but should be \"${KV}\"" 1>&2
++		echo "ERROR: Probably due to CONFIG_LOCALVERSION" 1>&2
++		exit 1
++	fi
+ fi
+-
+ rm -f .version
+ KBUILD_DEBARCH=$target_arch make -j $(($(nproc) * 2)) deb-pkg
+ 
+@@ -65,13 +66,13 @@ sed -i "s/Architecture: .*/Architecture: any/" "${REPACK_DIR}/debian/control"
+ 
+ cd ..
+ 
+-dpkg-deb -R linux-image-${PV}_${PV}-1_*.deb "${REPACK_LINUX_IMAGE_DIR}"
+-dpkg-deb -R linux-headers-${PV}_${PV}-1_*.deb "${REPACK_LINUX_HEADERS_DIR}"
++dpkg-deb -R linux-image-${KV}_${KV}-1_*.deb "${REPACK_LINUX_IMAGE_DIR}"
++dpkg-deb -R linux-headers-${KV}_${KV}-1_*.deb "${REPACK_LINUX_HEADERS_DIR}"
+ 
+ dpkg-gencontrol -crepack/debian/control \
+ 	-lrepack/debian/changelog \
+ 	-frepack/debian/files \
+-	-plinux-image-${PV} \
++	-plinux-image-${KV} \
+ 	-P"${REPACK_LINUX_IMAGE_DIR}" \
+ 	-DPackage="linux-image-${KERNEL_NAME}" \
+ 	-DSection=kernel \
+@@ -80,32 +81,32 @@ dpkg-gencontrol -crepack/debian/control \
+ 	-DArchitecture=$target_arch
+ 
+ # Add Debian-like link installation to postinst
+-mkdir -p ${REPACK_LINUX_IMAGE_DIR}/lib/modules/${PV}
+-touch "${REPACK_LINUX_IMAGE_DIR}/lib/modules/${PV}/.fresh-install"
++mkdir -p ${REPACK_LINUX_IMAGE_DIR}/lib/modules/${KV}
++touch "${REPACK_LINUX_IMAGE_DIR}/lib/modules/${KV}/.fresh-install"
+ sed -i "${REPACK_LINUX_IMAGE_DIR}/DEBIAN/postinst" \
+     -e "/^set -e$/a\\
+ \\
+-if [ -f /lib/modules/${PV}/.fresh-install ]; then\\
++if [ -f /lib/modules/${KV}/.fresh-install ]; then\\
+ 	change=install\\
+ else\\
+ 	change=upgrade\\
+ fi\\
+-linux-update-symlinks \$change ${PV} /boot/vmlinuz-${PV}\\
+-rm -f /lib/modules/${PV}/.fresh-install"
++linux-update-symlinks \$change ${KV} /boot/vmlinuz-${KV}\\
++rm -f /lib/modules/${KV}/.fresh-install"
+ 
+ # Add Debian-like link removal to postrm
+ sed -i "${REPACK_LINUX_IMAGE_DIR}/DEBIAN/postrm" \
+     -e "/^set -e$/a\\
+ \\
+-rm -f /lib/modules/${PV}/.fresh-install\\
++rm -f /lib/modules/${KV}/.fresh-install\\
+ \\
+ if [ \"\$1\" != upgrade ] && command -v linux-update-symlinks >/dev/null; then\\
+-	linux-update-symlinks remove ${PV}  /boot/vmlinuz-${PV}\\
++	linux-update-symlinks remove ${KV}  /boot/vmlinuz-${KV}\\
+ fi"
+ 
+ # Make sure arm64 kernels are decompressed
+ if [ "$target_arch" = "arm64" ]; then
+-	vmlinuz="${REPACK_LINUX_IMAGE_DIR}/boot/vmlinuz-${PV}"
++	vmlinuz="${REPACK_LINUX_IMAGE_DIR}/boot/vmlinuz-${KV}"
+ 	mv "$vmlinuz" "$vmlinuz.gz"
+ 	gunzip "$vmlinuz.gz"
+ fi
+@@ -113,7 +114,7 @@ fi
+ dpkg-gencontrol -crepack/debian/control \
+ 	-lrepack/debian/changelog \
+ 	-frepack/debian/files \
+-	-plinux-headers-${PV} \
++	-plinux-headers-${KV} \
+ 	-P"${REPACK_LINUX_HEADERS_DIR}" \
+ 	-Vkernel:debarch="${KERNEL_NAME}" \
+ 	-DPackage="linux-headers-${KERNEL_NAME}" \
+@@ -122,15 +123,15 @@ dpkg-gencontrol -crepack/debian/control \
+ 	-DArchitecture=$target_arch
+ 
+ fakeroot dpkg-deb -b "${REPACK_LINUX_IMAGE_DIR}" \
+-	linux-image-${KERNEL_NAME}_${PV}-1_${KERNEL_NAME}.deb
+-rm -f linux-image-${PV}_${PV}-1_*.deb
++	linux-image-${KERNEL_NAME}_${KV}-1_${KERNEL_NAME}.deb
++rm -f linux-image-${KV}_${KV}-1_*.deb
+ fakeroot dpkg-deb -b "${REPACK_LINUX_HEADERS_DIR}" \
+-	linux-headers-${KERNEL_NAME}_${PV}-1_${KERNEL_NAME}.deb
+-rm -f linux-headers-${PV}_${PV}-1_*.deb
++	linux-headers-${KERNEL_NAME}_${KV}-1_${KERNEL_NAME}.deb
++rm -f linux-headers-${KV}_${KV}-1_*.deb
+ 
+ # linux-libc-dev causes dependency problems if we downgrade
+ # remove it after the build so the downgraded version does not get deployed
+ LINUX_LIBC_DEV_V=$( dpkg-query --show --showformat '${Version}' linux-libc-dev )
+ if dpkg --compare-versions $LINUX_LIBC_DEV_V gt $PV-1; then
+-	rm -f linux-libc-dev_${PV}*.deb
++	rm -f linux-libc-dev_${KV}*.deb
+ fi
+-- 
+2.20.1
+
