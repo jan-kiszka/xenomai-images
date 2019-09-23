@@ -17,5 +17,6 @@ if [ "${os_version_id}" -ge "10" ]; then
     sudo apt update
     sudo apt install -y lavacli
 else
+    sudo pip3 install wheel
     sudo pip3 install lavacli
 fi
