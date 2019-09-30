@@ -27,10 +27,9 @@ default:
 .add-lava-ssh-config: &lava-ssh-key
   before_script:
     - mkdir -p -m=700 ~/.ssh
-    - echo "$LAVA_UPLOAD_KEY" | tr -d '\r' > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+    - echo "$LAVA_SSH_UPLOAD_KEY" | tr -d '\r' > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
     - echo "ProxyCommand socat - PROXY:$(echo $https_proxy | sed 's|.*://\([^:]*\).*|\1|'):%h:%p,proxyport=$(echo $https_proxy | sed 's|.*:\([0-9]*\)$|\1|')" >> ~/.ssh/config && chmod 600 ~/.ssh/config
-    - echo "$LAVA_KNOWN_HOST" >> ~/.ssh/known_hosts && chmod 644 ~/.ssh/known_hosts
-
+    - echo "$LAVA_SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts && chmod 644 ~/.ssh/known_hosts
 build:qemu-amd64:
   <<: *lava-ssh-key
   stage: build
@@ -47,7 +46,7 @@ lava-test:qemu-amd64:
   needs: [ "build:qemu-amd64" ]
   only:
     variables:
-      - $LAVA_USER
+      - $LAVA_SSH_USER
 
 build:qemu-armhf:
   <<: *lava-ssh-key
@@ -65,7 +64,7 @@ lava-test:qemu-armhf:
   needs: [ "build:qemu-armhf" ]
   only:
     variables:
-      - $LAVA_USER
+      - $LAVA_SSH_USER
 
 build:qemu-arm64:
   <<: *lava-ssh-key
@@ -83,7 +82,7 @@ lava-test:qemu-arm64:
   needs: [ "build:qemu-arm64" ]
   only:
     variables:
-      - $LAVA_USER
+      - $LAVA_SSH_USER
 
 build:board-hikey:
   <<: *lava-ssh-key
@@ -109,7 +108,7 @@ lava-test:board-beaglebone:
   needs: [ "build:board-beaglebone" ]
   only:
     variables:
-      - $LAVA_USER
+      - $LAVA_SSH_USER
 
 build:board-x86-64-efi:
   <<: *lava-ssh-key
@@ -127,4 +126,4 @@ lava-test:board-x86-64-efi:
   needs: [ "build:board-x86-64-efi" ]
   only:
     variables:
-      - $LAVA_USER
+      - $LAVA_SSH_USER

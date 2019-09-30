@@ -12,10 +12,13 @@
 set -e
 TARGET=$1
 
-LAVA_MASTER="${LAVA_USER}@${LAVA_HOST}"
 LAVA_MASTER_PORT=28080
+if [ -n "${LAVA_SSH_PORT}" ]; then
+    LAVA_SSH_PORT="-p ${LAVA_SSH_PORT}"
+fi
+LAVA_SSH_DESTINATION="${LAVA_SSH_USER}@${LAVA_SSH_HOST}"
 # open connection for ssh port forwarding
-ssh -N  -p ${LAVA_PORT} -o 'LocalForward localhost:'${LAVA_MASTER_PORT}' localhost:80' ${LAVA_MASTER} &
+ssh -N ${LAVA_SSH_PORT} -o 'LocalForward localhost:'${LAVA_MASTER_PORT}' localhost:80' ${LAVA_SSH_DESTINATION} &
 # wait for connection
 INTERVAL=1
 TIMEOUT=60
@@ -28,9 +31,10 @@ do
     sleep ${INTERVAL}
     TIMEOUT=$(expr ${TIMEOUT} - ${INTERVAL})
 done
-# connect to lava master
-lavacli identities add --token ${LAVA_TOKEN} --uri http://localhost:${LAVA_MASTER_PORT} --username ${LAVA_ACCOUNT} default
+LAVA_MASTER_URI=http://localhost:${LAVA_MASTER_PORT}
 
+# connect to lava master
+lavacli identities add --token ${LAVA_MASTER_TOKEN} --uri ${LAVA_MASTER_URI} --username ${LAVA_MASTER_ACCOUNT} default
 test_id=$(lavacli jobs submit tests/jobs/xenomai-${TARGET}.yml)
 lavacli jobs logs ${test_id}
 lavacli results ${test_id}

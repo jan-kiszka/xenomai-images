@@ -44,9 +44,9 @@ is used:
                                                                | Target 1 |
                                                             /--|  beagle  |
 +-----------+        +---------+       +---------+    /-----   |  bone    |
-|           |        | LAVA    |       | LAVA    | ---         +----------+
+|           |  ssh   | LAVA    |       | LAVA    | ---         +----------+
 | gitlab-   | ------ | master  |------ | Dis-    | --
-| runner    |        |         |       | patcher | \ \---      +----------+
+| runner    | tunnel |         |       | patcher | \ \---      +----------+
 +-----------+        +---------+       +---------+  \-   \---  | Target 2 |
                                                       \      \-| x86-64   |
                                                        \       |          |
@@ -84,3 +84,21 @@ and adds them to the rootfs
 Setup a lava environment by following the
 [installation guide](https://docs.lavasoftware.org/lava/first-installation.html)
 or use [lava-docker](https://github.com/kernelci/lava-docker).
+
+# CI Variables
+
+The following variables are used and set by the ci system:
+- `HTTP_PROXY`    : proxy settings
+- `HTTPS_PROXY`   : proxy settings
+- `FTP_PROXY`     : proxy settings
+- `NO_PROXY`      : proxy settings
+- `LAVA_SSH_USER` : ssh user to connect to the LAVA master
+- `LAVA_SSH_HOST` : ssh host name to connect to the LAVA master
+- `LAVA_SSH_PORT` : ssh port used for the ssh tunnel
+- `LAVA_SSH_UPLOAD_KEY`  :  private ssh key to connect to the LAVA master
+- `LAVA_SSH_KNOWN_HOSTS` : Known hosts to connect via ssh to the host given by `LAVA_SSH_HOST`
+- `LAVA_MASTER_ACCOUNT`  : lava master account name to register lavacli for test execution
+- `LAVA_MASTER_TOKEN`    : token to connect with the lava master
+- `LAVA_DEPLOY_DIR`    : optional variable to define directory to store the build artifacts
+- `LAVA_ARTIFACTS_URL` : optional variable where to get the artifacts for testing
+- `BUILD_OPTIONS` : optional parameter. Used for triggers. Overwrite to build the newest ipipe together with xenomai or other combinations.
