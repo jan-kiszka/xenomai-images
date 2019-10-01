@@ -25,9 +25,6 @@ metadata:
   # please change these fields when modifying this job for your own tests.
   docs-source: xenomai-beagleboneblack
   docs-filename: pipeline-xenomai-beagleboneblack
-context:
-  console_device: ttyO
-  baud_rate: 115200
 # ACTION_BLOCK
 actions:
 - deploy:
