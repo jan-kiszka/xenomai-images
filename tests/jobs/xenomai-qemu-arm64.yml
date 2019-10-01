@@ -92,7 +92,7 @@ actions:
             - quirin.gylstorff@siemens.org
         run:
           steps:
-            - lava-test-case xenomai-smokey --shell xeno-test -k
+            - lava-test-case xenomai-smokey --shell xeno-test -k --vm
       from: inline
       path: inline/xenomai-test-suite.yaml
       name: xenomai-test-suite
