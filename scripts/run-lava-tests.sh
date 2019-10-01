@@ -33,9 +33,20 @@ do
 done
 LAVA_MASTER_URI=http://localhost:${LAVA_MASTER_PORT}
 
+if [ -z "${TARGET}" ]; then
+    echo "no target was given"
+    exit -1
+fi
+artifact_url="${LAVA_ARTIFACTS_URL:-'http://localhost/artifacts'}"
+
 # connect to lava master
 lavacli identities add --token ${LAVA_MASTER_TOKEN} --uri ${LAVA_MASTER_URI} --username ${LAVA_MASTER_ACCOUNT} default
-test_id=$(lavacli jobs submit tests/jobs/xenomai-${TARGET}.yml)
+
+#generate lava job description from template
+DEPLOY_URL="${artifact_url}/${CI_PIPELINE_ID}"
+template=$(cat tests/jobs/xenomai-${TARGET}.yml)
+test_id=$(eval "cat <<EOF ${template}
+EOF" | lavacli jobs submit -)
 lavacli jobs logs ${test_id}
 lavacli results ${test_id}
 # change return code to generate a error in gitlab-ci if a test is failed

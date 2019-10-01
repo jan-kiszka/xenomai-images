@@ -47,14 +47,13 @@ actions:
     images:
       kernel:
         image_arg: -kernel {kernel} -append "root=/dev/vdb"
-        url: http://localhost/artifacts/demo-image-xenomai-demo-qemu-armhf-vmlinuz
+        url: ${DEPLOY_URL}/demo-image-xenomai-demo-qemu-armhf-vmlinuz
       initrd:
         image_arg: -initrd {initrd}
-        url: http://localhost/artifacts/demo-image-xenomai-demo-qemu-armhf-initrd.img
+        url: ${DEPLOY_URL}/demo-image-xenomai-demo-qemu-armhf-initrd.img
       rootfs:
         image_arg: -drive file={rootfs},discard=unmap,if=none,id=disk,format=raw
-        url: http://localhost/artifacts/demo-image-xenomai-demo-qemu-armhf.ext4.img
-
+        url: ${DEPLOY_URL}/demo-image-xenomai-demo-qemu-armhf.ext4.img
 # BOOT_BLOCK
 - boot:
     timeout:
@@ -69,6 +68,8 @@ actions:
       password: root
 
 - test:
+    timeout:
+      minutes: 30
     definitions:
     - repository: http://git.linaro.org/lava-team/lava-functional-tests.git
       from: git

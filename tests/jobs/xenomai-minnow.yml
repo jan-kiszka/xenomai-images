@@ -31,13 +31,13 @@ actions:
       minutes: 5
     to: tftp
     kernel:
-      url: http://localhost/artifacts/demo-image-xenomai-demo-x86-64-efi-vmlinuz
+      url: ${DEPLOY_URL}/demo-image-xenomai-demo-x86-64-efi-vmlinuz
       type: bzimage
     ramdisk:
-      url: http://localhost/artifacts/demo-image-xenomai-demo-x86-64-efi-initrd.img
+      url: ${DEPLOY_URL}/demo-image-xenomai-demo-x86-64-efi-initrd.img
       compression: gz
     nfsrootfs:
-      url: http://localhost/artifacts/demo-image-xenomai-demo-x86-64-efi.tar.gz
+      url: ${DEPLOY_URL}/demo-image-xenomai-demo-x86-64-efi.tar.gz
       compression: gz
 # BOOT_BLOCK
 - boot:

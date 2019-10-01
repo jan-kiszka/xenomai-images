@@ -35,12 +35,12 @@ actions:
       minutes: 5
     to: tftp
     kernel:
-      url: http://localhost/artifacts/demo-image-xenomai-demo-beagle-bone-black-vmlinuz
+      url: ${DEPLOY_URL}/demo-image-xenomai-demo-beagle-bone-black-vmlinuz
       type: zimage
     dtb:
-      url: http://localhost/artifacts/am335x-boneblack.dtb
+      url: ${DEPLOY_URL}/am335x-boneblack.dtb
     nfsrootfs:
-      url: http://localhost/artifacts/demo-image-xenomai-demo-beagle-bone-black.tar.gz
+      url: ${DEPLOY_URL}/demo-image-xenomai-demo-beagle-bone-black.tar.gz
       compression: gz
 # BOOT_BLOCK
 - boot:
