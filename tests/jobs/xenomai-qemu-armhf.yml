@@ -53,7 +53,8 @@ actions:
         url: ${DEPLOY_URL}/demo-image-xenomai-demo-qemu-armhf-initrd.img
       rootfs:
         image_arg: -drive file={rootfs},discard=unmap,if=none,id=disk,format=raw
-        url: ${DEPLOY_URL}/demo-image-xenomai-demo-qemu-armhf.ext4.img
+        url: ${DEPLOY_URL}/demo-image-xenomai-demo-qemu-armhf.ext4.img.gz
+        compression: gz
 # BOOT_BLOCK
 - boot:
     timeout:

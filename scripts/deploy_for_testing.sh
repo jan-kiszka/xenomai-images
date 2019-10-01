@@ -35,6 +35,9 @@ scp -P ${LAVA_SSH_PORT} ${IMAGES_DIR}/${TARGET}/demo-image-xenomai-demo-${TARGET
 scp -P ${LAVA_SSH_PORT} ${IMAGES_DIR}/${TARGET}/demo-image-xenomai-demo-${TARGET}-initrd.img \
     ${LAVA_SSH_DESTINATION}:${DEPLOY_DIR}
 # ROOTFS
+if [ -n ${IMAGES_DIR}/${TARGET}/demo-image-xenomai-demo-${TARGET}.*.gz  ]; then
+    gzip ${IMAGES_DIR}/${TARGET}/demo-image-xenomai-demo-${TARGET}.*
+fi
 scp -P ${LAVA_SSH_PORT} ${IMAGES_DIR}/${TARGET}/demo-image-xenomai-demo-${TARGET}.* \
     ${LAVA_SSH_DESTINATION}:${DEPLOY_DIR}
 # DTB
