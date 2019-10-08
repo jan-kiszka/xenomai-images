@@ -1,0 +1,27 @@
+language: c
+dist: bionic
+
+services:
+  - docker
+
+install:
+  - wget https://raw.githubusercontent.com/siemens/kas/1.1/kas-docker
+  - chmod a+x kas-docker
+
+script:
+  - ./kas-docker --isar build kas.yml:${BOARD}${OPTS}
+
+matrix:
+  include:
+    - name: "qemu-amd64"
+      env:
+      - BOARD: "board-qemu-amd64.yml"
+        OPTS: ":opt-xenomai-next.yml"
+    - name: "qemu-armhf"
+      env:
+      - BOARD: "board-qemu-armhf.yml"
+        OPTS: ":opt-xenomai-next.yml"
+    - name: "qemu-arm64"
+      env:
+      - BOARD: "board-qemu-arm64.yml"
+        OPTS: ":opt-xenomai-next.yml"
